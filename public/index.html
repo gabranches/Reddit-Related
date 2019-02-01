@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="row">
+        <div class="col">
+          <a v-bind:href="multi">multi</a>
+        </div>
+      </div>
+      <div v-for="result in list" class="row">
+        <div class="col text-right">
+          <a v-bind:href="subLink(result.subreddit)" target="_blank">{{
+            result.subreddit
+          }}</a>
+        </div>
+        <div class="col text-left">{{ result.count }}</div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script src="/index.js"></script>

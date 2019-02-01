@@ -1,0 +1,20 @@
+{
+  "name": "reddit-related",
+  "version": "1.0.0",
+  "description": "find reddit related subreddits by user post behavior",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon test.js",
+    "start": "nodemon index.js"
+  },
+  "author": "Gustavo Abranches",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "pug": "^2.0.3",
+    "socket.io": "^2.2.0"
+  }
+}
