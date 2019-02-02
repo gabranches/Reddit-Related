@@ -1,3 +1,28 @@
-body {
+.section {
+  margin-top: 30px;
+}
+
+.bar{
+  border: 1px solid grey;
+  padding-left: 15px;
+  position: relative;
+  line-height: 30px;
+  height: 30px;
   
+}
+
+.bar-background{
+  line-height: 30px;
+  height: 30px;
+  content: '\A';
+  background:#007bff33;
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  padding-left: 15px;
+}
+
+.subname {
+  padding: 5px;
 }

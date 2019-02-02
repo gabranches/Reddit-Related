@@ -3,9 +3,9 @@ const utils = require('./utils')
 const api = require('./reddit-api')
 
 module.exports = class Reddit {
-  constructor(subreddit, io) {
+  constructor(subreddit, socket) {
     this._subreddit = subreddit
-    this._io = io
+    this._socket = socket
   }
 
   async findRelated() {
@@ -15,16 +15,22 @@ module.exports = class Reddit {
         this._posts = this._sub.data.children
         this._authors = this.getAuthors()
         this._subreddits = await this.getAuthorSubreddits()
+        resolve()
       } catch (error) {
         reject(error)
       }
     })
   }
 
-  package() {
+  package(count) {
     const all = [].concat.apply([], this._subreddits)
     const freqs = utils.getFreqs(all).sort((a, b) => b.count - a.count)
-    return JSON.stringify(freqs)
+    const pkg = {
+      count: count,
+      total: this._authors.size,
+      freqs: freqs,
+    }
+    return JSON.stringify(pkg)
   }
 
   getAuthors() {
@@ -43,13 +49,17 @@ module.exports = class Reddit {
         let i = 1
         async.eachSeries(
           this._authors,
-          async author => {
-            const s = await this.getSubreddits(author)
-            console.log(`Getting ${i} of ${this._authors.size}`)
-            i++
-            this._subreddits.push(Array.from(new Set(s)))
-            this._io.emit('related', this.package())
-            await utils.waitFor(1000)
+          async (author) => {
+            if (this._socket.connected) {
+              const s = await this.getSubreddits(author)
+              console.log(`Getting ${i} of ${this._authors.size}`)
+              this._subreddits.push(Array.from(new Set(s)))
+              this._socket.emit('related', this.package(i))
+              i++
+              await utils.waitFor(1000)
+            } else {
+              console.log('User disconnected. Stopping.')
+            }
           },
           err => {
             if (err) reject(err)

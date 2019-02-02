@@ -7,16 +7,26 @@ const Reddit = require('./modules/reddit.js')
 app.use(express.static('public'))
 
 io.on('connection', function(socket) {
-  console.log('User connected')
+  const clientIp = socket.request.connection.remoteAddress
+  const clientId = socket.id
 
-  socket.on('request-subreddit', function(msg){
-    console.log('Subreddit requested: ' + msg);
-    const r = new Reddit(msg, io)
-    r.findRelated(io)
-  });
+  console.log(`User ${clientIp}:${clientId} connected`)
+
+  socket.on('request-subreddit', function(msg) {
+    console.log('Subreddit requested: ' + msg)
+    const r = new Reddit(msg, socket)
+    r.findRelated()
+      .then(() => {
+        io.emit('done')
+        console.log('Done.')
+      })
+      .catch(e => {
+        throw e
+      })
+  })
 
   socket.on('disconnect', function() {
-    console.log('User disconnected')
+    console.log(`User ${clientIp}:${clientId} disconnected`)
   })
 })
 

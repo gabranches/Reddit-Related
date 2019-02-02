@@ -12,18 +12,62 @@
   </head>
   <body>
     <div id="app" class="container">
-      <div class="row">
+      <div class="row section">
+        <div class="col">
+          {{ statusText }}
+        </div>
+      </div>
+      <div class="row section">
+        <div class="col text-center">
+          <div class="form-row">
+            <div class="col text-right">
+              <input
+                type="text"
+                class="form-control"
+                v-model="subreddit"
+                placeholder="Enter a subreddit"
+                v-on:keyup.enter="requestSubreddit()"
+              />
+            </div>
+            <div class="col text-left">
+              <button
+                v-on:click="requestSubreddit()"
+                class="btn btn-primary"
+                v-bind:disabled="searching"
+              >
+                Find Related Subreddits
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row section">
         <div class="col">
           <a v-bind:href="multi">multi</a>
         </div>
-      </div>
-      <div v-for="result in list" class="row">
-        <div class="col text-right">
-          <a v-bind:href="subLink(result.subreddit)" target="_blank">{{
-            result.subreddit
-          }}</a>
+      </div> -->
+      <div v-if="list.length > 0" class="row section">
+          <div class="col">
+            Users who post on r/{{ subreddit }} also post on:
+          </div>
         </div>
-        <div class="col text-left">{{ result.count }}</div>
+      <div v-for="result in list" class="row section">
+        <div class="col-4 text-right">
+          <div class="subname">
+            <a v-bind:href="subLink(result.subreddit)" target="_blank">{{
+              result.subreddit
+            }}</a>
+          </div>
+        </div>
+        <div class="col-8 text-left">
+          <div class="bar">
+            {{ countText(result.count) }}
+            <div
+              class="bar-background"
+              v-bind:style="getBarWidthStyle(result.count)"
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
