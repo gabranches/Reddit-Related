@@ -13,11 +13,6 @@
   <body>
     <div id="app" class="container">
       <div class="row section">
-        <div class="col">
-          {{ statusText }}
-        </div>
-      </div>
-      <div class="row section">
         <div class="col text-center">
           <div class="form-row">
             <div class="col text-right">
@@ -34,8 +29,16 @@
                 v-on:click="requestSubreddit()"
                 class="btn btn-primary"
                 v-bind:disabled="searching"
+                v-if="!searching"
               >
                 Find Related Subreddits
+              </button>
+              <button
+                v-on:click="stop()"
+                class="btn btn-danger"
+                v-if="searching"
+              >
+                Stop
               </button>
             </div>
           </div>
@@ -46,20 +49,32 @@
           <a v-bind:href="multi">multi</a>
         </div>
       </div> -->
-      <div v-if="list.length > 0" class="row section">
-          <div class="col">
-            Users who post on r/{{ subreddit }} also post on:
+      <div class="row section">
+        <div class="col">
+          <div class="bar" v-bind:style="getLoadingBarWrapperStyle()">
+            {{ statusText }}
+            <div
+              class="bar-background"
+              v-bind:style="getLoadingBarStyle()"
+            ></div>
           </div>
         </div>
+      </div>
+      <div v-if="list.length > 0" class="row section">
+        <div class="col">
+          Users who post on <span class="bold">r/{{ lastsearch }}</span> also
+          post on:
+        </div>
+      </div>
       <div v-for="result in list" class="row section">
-        <div class="col-4 text-right">
+        <div class="col-5 col-sm-4 col-md-3 col-xl-2 text-right">
           <div class="subname">
             <a v-bind:href="subLink(result.subreddit)" target="_blank">{{
               result.subreddit
             }}</a>
           </div>
         </div>
-        <div class="col-8 text-left">
+        <div class="col-6 col-sm-7 col-md-8 col-xl-9 text-left">
           <div class="bar">
             {{ countText(result.count) }}
             <div
@@ -68,6 +83,7 @@
             ></div>
           </div>
         </div>
+        <div class="col-1"></div>
       </div>
     </div>
   </body>

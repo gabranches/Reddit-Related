@@ -12,10 +12,11 @@ io.on('connection', function(socket) {
 
   console.log(`User ${clientIp}:${clientId} connected`)
 
+  const r = new Reddit(socket)
+
   socket.on('request-subreddit', function(msg) {
     console.log('Subreddit requested: ' + msg)
-    const r = new Reddit(msg, socket)
-    r.findRelated()
+    r.findRelated(msg)
       .then(() => {
         io.emit('done')
         console.log('Done.')
@@ -23,6 +24,10 @@ io.on('connection', function(socket) {
       .catch(e => {
         throw e
       })
+  })
+
+  socket.on('stop', () => {
+    r.stop()
   })
 
   socket.on('disconnect', function() {

@@ -3,15 +3,17 @@ const utils = require('./utils')
 const api = require('./reddit-api')
 
 module.exports = class Reddit {
-  constructor(subreddit, socket) {
-    this._subreddit = subreddit
+  constructor(socket) {
     this._socket = socket
+    this._run = false
   }
-
-  async findRelated() {
+  
+  async findRelated(subreddit) {
     return new Promise(async (resolve, reject) => {
       try {
-        this._sub = await api.getSubredditPosts(this._subreddit, 50)
+        this._subreddit = subreddit
+        this._run = true
+        this._sub = await api.getSubredditPosts(this._subreddit, 100)
         this._posts = this._sub.data.children
         this._authors = this.getAuthors()
         this._subreddits = await this.getAuthorSubreddits()
@@ -41,6 +43,11 @@ module.exports = class Reddit {
     return new Set(authors)
   }
 
+  stop() {
+    this._run = false
+  }
+
+
   async getAuthorSubreddits() {
     return new Promise(async (resolve, reject) => {
       let subreddits = []
@@ -50,7 +57,7 @@ module.exports = class Reddit {
         async.eachSeries(
           this._authors,
           async (author) => {
-            if (this._socket.connected) {
+            if (this._socket.connected && this._run) {
               const s = await this.getSubreddits(author)
               console.log(`Getting ${i} of ${this._authors.size}`)
               this._subreddits.push(Array.from(new Set(s)))
