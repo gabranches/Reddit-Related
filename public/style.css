@@ -1,6 +1,5 @@
 .section {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 30px;
 }
 
 .bar{
@@ -29,4 +28,14 @@
 
 .bold {
   font-weight: bold;
+}
+
+.container {
+  max-width: 800px;
+}
+
+* {
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
 }

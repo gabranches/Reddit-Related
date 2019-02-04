@@ -49,7 +49,7 @@
           <a v-bind:href="multi">multi</a>
         </div>
       </div> -->
-      <div class="row section">
+      <div class="row section" v-if="!lastsearch || searching">
         <div class="col">
           <div class="bar" v-bind:style="getLoadingBarWrapperStyle()">
             {{ statusText }}
@@ -67,14 +67,14 @@
         </div>
       </div>
       <div v-for="result in list" class="row section">
-        <div class="col-5 col-sm-4 col-md-3 col-xl-2 text-right">
+        <div class="col-5 col-sm-4 col-md-3 text-right">
           <div class="subname">
             <a v-bind:href="subLink(result.subreddit)" target="_blank">{{
               result.subreddit
             }}</a>
           </div>
         </div>
-        <div class="col-6 col-sm-7 col-md-8 col-xl-9 text-left">
+        <div class="col-6 col-sm-7 col-md-8 text-left">
           <div class="bar">
             {{ countText(result.count) }}
             <div

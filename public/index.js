@@ -83,7 +83,7 @@ var app = new Vue({
     },
     getLoadingBarWrapperStyle() {
       if (!this.searching) return ''
-      return `border: 1px solid grey;`
+      return `border: 1px solid #90bcea;`
     },
   },
 })
